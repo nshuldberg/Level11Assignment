@@ -15,7 +15,10 @@ while True:
         user_row -=1
 
         # Print user's desired row information
-        print(video_games.iloc[user_row])
+        display_columns = ["Title","Platform","Genre","Rating","Status"]
+        print("")
+        for column in display_columns:
+            print(f"{column}: {video_games.loc[user_row,column]}")
 
         # Prompt the user to update game's status
         print(f"\nUpdate the status for {video_games.loc[user_row, "Title"]}")
