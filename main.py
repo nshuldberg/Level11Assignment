@@ -15,16 +15,13 @@ while True:
         user_row -=1
 
         # Print user's desired row information
-        display_columns = ["Title","Platform","Genre","Rating","Status"]
-        print("")
-        for column in display_columns:
-            print(f"{column}: {video_games.loc[user_row,column]}")
+        print("\n",video_games.iloc[user_row])
 
         # Prompt the user to update game's status
-        print(f"\nUpdate the status for {video_games.loc[user_row, "Title"]}")
+        print(f"\nUpdate the status for {video_games.loc[user_row, 'Title']}")
         print("==========")
 
-        # Let user change the status to change the game to.
+        # Let user change the status of the game.
         while True:
             try:
                 print("OPTIONS:")
@@ -46,14 +43,22 @@ while True:
             except ValueError as e:
                 print(e)
 
-        # Create recommendation requirement and add the column to the dataframe.
-        video_games_cleaned["Recommended"] = ((video_games["Rating"] >= 8) & (video_games["Price"] <= 40.00)).map({True: "Yes", False:"No"})
-        recommendation = video_games_cleaned.query("Recommended == 'Yes'")[["Title","Platform","Price","Rating"]]
+        # Create recommendation column and assign the games that meet the criteria as "Yes".
+        video_games_cleaned["Recommended"] = "No"
 
+        video_games_cleaned.loc[
+            (video_games_cleaned["Rating"] >= 8) &
+            (video_games_cleaned["Price"] <= 40.00),
+            "Recommended"] = "Yes"
+
+        recommended = video_games_cleaned.query("Recommended == 'Yes'")
         # Save new data to new cleaned games file, and remove the index that would cause a duplicate index column to be created.
         video_games_cleaned.to_csv("video_games_cleaned.csv", index=False)
         print("\nRecommended games:")
-        print(recommendation)
+        print(recommended)
+
+        # Inform user that new data is saved to new csv file.
+        print("New data saved in video_games_cleaned.csv")
         break
     except ValueError as ve:
         print(ve)
